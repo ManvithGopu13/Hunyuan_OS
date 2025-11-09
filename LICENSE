@@ -20,9 +20,3 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
----
-
-Note: 3D models in this repository are generated using Tencent's Hunyuan3D-2.0,
-which is subject to the Tencent Hunyuan Community License. For more information,
-visit: https://huggingface.co/tencent/Hunyuan3D-2/blob/main/LICENSE.txt
-
