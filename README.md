@@ -42,6 +42,7 @@ Hunyuan3D-2.0 is a state-of-the-art large-scale 3D synthesis system developed by
 - 📂 **Organized Model Collection**: Each model includes shape, texture, reference image, and preview
 - 🖼️ **Visual Documentation**: Screenshots and original images for each 3D model
 - 🎮 **Easy Viewing**: Built-in GLB file viewer for quick model inspection
+- ☁️ **Kaggle/Colab Ready**: Complete Jupyter notebook for generating your own models (FREE GPU!)
 - 🔄 **Regular Updates**: New models added frequently
 - 🤝 **Community Driven**: Open for contributions from the community
 
@@ -49,14 +50,48 @@ Hunyuan3D-2.0 is a state-of-the-art large-scale 3D synthesis system developed by
 
 ## 🚀 Quick Start
 
-### Prerequisites
+### 🎯 Generate Your Own 3D Models (Recommended)
+
+**Want to create 3D models yourself?** We've made it easy!
+
+#### ☁️ **Use Kaggle or Google Colab (Recommended - FREE GPU!)**
+
+The easiest way to generate models is using our ready-to-use Jupyter notebook on Kaggle or Google Colab:
+
+1. **Download the notebook**: [Hunyuan3D_Kaggle_Guide.ipynb](./Hunyuan3D_Kaggle_Guide.ipynb)
+2. **Upload to Kaggle or Google Colab**
+3. **Enable GPU** (T4 recommended)
+4. **Run all cells** and wait for your Gradio URL
+5. **Generate models** from images or text prompts!
+
+📝 **Why Kaggle/Colab?**
+- ✅ **Free GPU access** (much faster than CPU)
+- ✅ **Pre-configured environment** (no local setup needed)
+- ✅ **Step-by-step guide** with all commands
+- ✅ **Works out of the box** (tested and optimized)
+- ✅ **~5-12 minutes per model** on T4 GPU
+
+The notebook includes:
+- Complete installation instructions
+- Dependency management
+- Gradio web interface setup
+- Tips for best results
+- Troubleshooting guide
+
+---
+
+### 💻 Local Viewing
+
+If you just want to view existing models from this gallery:
+
+#### Prerequisites
 
 ```bash
 # Python 3.8 or higher required
 python --version
 ```
 
-### Installation
+#### Installation
 
 1. **Clone the repository**
 
@@ -71,7 +106,7 @@ cd Hunyuan_OS
 pip install -r requirements.txt
 ```
 
-### 🎮 Viewing 3D Models
+#### 🎮 Viewing 3D Models
 
 We provide a convenient GLB viewer to inspect all 3D models in this repository.
 
@@ -151,6 +186,188 @@ The GLB files can be opened in various 3D applications:
 <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 <model-viewer src="path/to/model_tex.glb" auto-rotate camera-controls></model-viewer>
 ```
+
+---
+
+## 💻 Local Setup (Advanced Users)
+
+Want to run Hunyuan3D-2.0 locally? Here's a complete guide!
+
+### 📋 System Requirements
+
+**Minimum:**
+- **GPU**: NVIDIA with 12GB+ VRAM (RTX 3060 12GB, RTX 4070+)
+- **Python**: 3.9 - 3.11 (3.10 recommended)
+- **CUDA**: 11.8 or 12.1
+- **RAM**: 16GB+ system memory
+- **Storage**: 50GB+ free space
+
+**Recommended:**
+- **GPU**: RTX 4080/4090 or A5000/A6000 (16GB+ VRAM)
+- **RAM**: 32GB+
+- **Storage**: SSD with 100GB+ free
+
+### 🔧 Installation Steps
+
+1. **Install Prerequisites**
+   ```bash
+   # Python 3.10
+   # CUDA 11.8 or 12.1
+   # Visual Studio Build Tools (Windows) or build-essential (Linux)
+   ```
+
+2. **Clone Official Repository**
+   ```bash
+   git clone https://github.com/Tencent-Hunyuan/Hunyuan3D-2.git
+   cd Hunyuan3D-2
+   ```
+
+3. **Create Virtual Environment**
+   ```bash
+   python3.10 -m venv venv
+   source venv/bin/activate  # Linux/macOS
+   # OR
+   venv\Scripts\activate  # Windows
+   ```
+
+4. **Install PyTorch with CUDA**
+   ```bash
+   # CUDA 11.8
+   pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+   
+   # CUDA 12.1
+   pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+   ```
+
+5. **Install Dependencies**
+   ```bash
+   pip install -r requirements.txt
+   pip install transformers==4.46.1 diffusers==0.30.2 optimum==1.23.2 accelerate==0.33.0
+   ```
+
+6. **Build Custom Modules**
+   ```bash
+   # Custom rasterizer
+   cd hy3dgen/texgen/custom_rasterizer && python setup.py install && cd ../../..
+   
+   # Differentiable renderer
+   cd hy3dgen/texgen/differentiable_renderer && python setup.py install && cd ../../..
+   ```
+
+7. **Launch Gradio App**
+   ```bash
+   python gradio_app.py --enable_t23d --profile 5
+   ```
+
+📘 **Detailed Guide**: See [Hunyuan3D_Kaggle_Guide.ipynb](./Hunyuan3D_Kaggle_Guide.ipynb) for complete local setup instructions.
+
+---
+
+## 🐛 Troubleshooting
+
+### Common Issues & Solutions
+
+#### ⚠️ Installation Problems
+
+**CUDA Out of Memory**
+- Reduce profile: Use `--profile 3` instead of `--profile 5`
+- Close other GPU applications
+- Reduce input image resolution to 512x512
+- Restart Python kernel
+
+**Module Not Found Errors**
+```bash
+# Reinstall specific versions
+pip uninstall -y transformers diffusers
+pip install --no-cache-dir transformers==4.46.1 diffusers==0.30.2
+```
+
+**Build Errors (Windows)**
+- Install Visual Studio Build Tools with "Desktop development with C++"
+- Restart terminal after installation
+
+**Build Errors (Linux)**
+```bash
+sudo apt-get install build-essential python3-dev
+pip install wheel setuptools
+```
+
+#### 🔧 Runtime Issues
+
+**Slow Generation (>30 min)**
+- Check GPU is enabled: `torch.cuda.is_available()` should return `True`
+- Verify GPU usage: `nvidia-smi`
+- Ensure CUDA drivers are up to date
+
+**Gradio Interface Not Loading**
+- Check firewall settings
+- Try different port: `python gradio_app.py --port 7861`
+- Look for public URL in terminal output
+
+**Low Quality Models**
+- Use higher profile (--profile 5)
+- Provide clear, well-lit input images
+- Use simple backgrounds
+- Try front-facing object views
+- Input resolution: 512x512 to 1024x1024
+
+#### 💾 File Issues
+
+**Can't Find Generated Models**
+
+Check these directories:
+- `./outputs/`
+- `./gradio_cache/`
+- `./tmp/`
+
+Use the file finder in our notebook (Step 10) or run:
+```python
+find . -name "*.glb" -type f
+```
+
+#### ⚙️ Performance Optimization
+
+**Speed Up Generation:**
+1. Enable GPU in system settings
+2. Use CUDA 11.8 or 12.1 (not CPU-only PyTorch)
+3. Close unnecessary applications
+4. Use lower profile for testing: `--profile 3`
+5. Clear GPU cache:
+   ```python
+   import torch
+   torch.cuda.empty_cache()
+   ```
+
+**Memory Optimization:**
+- Generate one model at a time
+- Restart kernel between generations
+- Monitor GPU memory: `nvidia-smi`
+
+#### 🆘 Quick Diagnostics
+
+Run these commands to check your setup:
+
+```bash
+# Check Python version
+python --version  # Should be 3.9-3.11
+
+# Check CUDA
+nvcc --version
+python -c "import torch; print(f'CUDA available: {torch.cuda.is_available()}')"
+
+# Check GPU
+nvidia-smi
+
+# Test PyTorch
+python -c "import torch; print(f'PyTorch: {torch.__version__}'); print(f'GPU: {torch.cuda.get_device_name(0) if torch.cuda.is_available() else \"None\"}')"
+```
+
+### 📚 Need More Help?
+
+- **📓 Complete Guide**: Check our [Jupyter Notebook](./Hunyuan3D_Kaggle_Guide.ipynb) for detailed troubleshooting
+- **🐛 Report Issues**: [GitHub Issues](https://github.com/ManvithGopu13/Hunyuan_OS/issues)
+- **💬 Discussions**: [Community Forum](https://github.com/ManvithGopu13/Hunyuan_OS/discussions)
+- **📖 Official Docs**: [Hunyuan3D-2 Repository](https://github.com/Tencent-Hunyuan/Hunyuan3D-2)
 
 ---
 
