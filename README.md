@@ -42,6 +42,7 @@ Hunyuan3D-2.0 is a state-of-the-art large-scale 3D synthesis system developed by
 - 📂 **Organized Model Collection**: Each model includes shape, texture, reference image, and preview
 - 🖼️ **Visual Documentation**: Screenshots and original images for each 3D model
 - 🎮 **Easy Viewing**: Built-in GLB file viewer for quick model inspection
+- ☁️ **Kaggle/Colab Ready**: Complete Jupyter notebook for generating your own models (FREE GPU!)
 - 🔄 **Regular Updates**: New models added frequently
 - 🤝 **Community Driven**: Open for contributions from the community
 
@@ -49,14 +50,48 @@ Hunyuan3D-2.0 is a state-of-the-art large-scale 3D synthesis system developed by
 
 ## 🚀 Quick Start
 
-### Prerequisites
+### 🎯 Generate Your Own 3D Models (Recommended)
+
+**Want to create 3D models yourself?** We've made it easy!
+
+#### ☁️ **Use Kaggle or Google Colab (Recommended - FREE GPU!)**
+
+The easiest way to generate models is using our ready-to-use Jupyter notebook on Kaggle or Google Colab:
+
+1. **Download the notebook**: [Hunyuan3D_Kaggle_Guide.ipynb](./Hunyuan3D_Kaggle_Guide.ipynb)
+2. **Upload to Kaggle or Google Colab**
+3. **Enable GPU** (T4 recommended)
+4. **Run all cells** and wait for your Gradio URL
+5. **Generate models** from images or text prompts!
+
+📝 **Why Kaggle/Colab?**
+- ✅ **Free GPU access** (much faster than CPU)
+- ✅ **Pre-configured environment** (no local setup needed)
+- ✅ **Step-by-step guide** with all commands
+- ✅ **Works out of the box** (tested and optimized)
+- ✅ **~5-12 minutes per model** on T4 GPU
+
+The notebook includes:
+- Complete installation instructions
+- Dependency management
+- Gradio web interface setup
+- Tips for best results
+- Troubleshooting guide
+
+---
+
+### 💻 Local Viewing
+
+If you just want to view existing models from this gallery:
+
+#### Prerequisites
 
 ```bash
 # Python 3.8 or higher required
 python --version
 ```
 
-### Installation
+#### Installation
 
 1. **Clone the repository**
 
@@ -71,7 +106,7 @@ cd Hunyuan_OS
 pip install -r requirements.txt
 ```
 
-### 🎮 Viewing 3D Models
+#### 🎮 Viewing 3D Models
 
 We provide a convenient GLB viewer to inspect all 3D models in this repository.
 
