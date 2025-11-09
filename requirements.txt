@@ -1,0 +1,4 @@
+trimesh
+pyrender
+
+# python<=12 #preferred
