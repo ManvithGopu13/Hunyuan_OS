@@ -1,0 +1,103 @@
+name: PR Validation
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    
+    - name: Check file structure for new models
+      run: |
+        echo "Checking for new 3D model submissions..."
+        
+        # Get changed files
+        CHANGED_FILES=$(git diff --name-only origin/main...HEAD)
+        
+        # Check if any files are in 3d_models directory
+        if echo "$CHANGED_FILES" | grep -q "3d_models/"; then
+          echo "✅ 3D model submission detected"
+          
+          # Extract model directories
+          MODEL_DIRS=$(echo "$CHANGED_FILES" | grep "3d_models/" | cut -d'/' -f1,2 | sort -u)
+          
+          for DIR in $MODEL_DIRS; do
+            echo "Validating: $DIR"
+            
+            # Check for required files
+            HAS_SHAPE=false
+            HAS_TEX=false
+            HAS_IMAGE=false
+            HAS_SCREENSHOT=false
+            
+            if ls $DIR/*_shape.glb 1> /dev/null 2>&1; then HAS_SHAPE=true; fi
+            if ls $DIR/*_tex.glb 1> /dev/null 2>&1; then HAS_TEX=true; fi
+            if ls $DIR/*.jpeg 1> /dev/null 2>&1 || ls $DIR/*.jpg 1> /dev/null 2>&1; then HAS_IMAGE=true; fi
+            if ls $DIR/*.png 1> /dev/null 2>&1; then HAS_SCREENSHOT=true; fi
+            
+            echo "Shape GLB: $HAS_SHAPE"
+            echo "Texture GLB: $HAS_TEX"
+            echo "Reference Image: $HAS_IMAGE"
+            echo "Screenshot: $HAS_SCREENSHOT"
+            
+            if [ "$HAS_SHAPE" = false ] || [ "$HAS_TEX" = false ] || [ "$HAS_IMAGE" = false ] || [ "$HAS_SCREENSHOT" = false ]; then
+              echo "⚠️ Warning: $DIR is missing required files"
+              echo "Please ensure all required files are included:"
+              echo "  - *_shape.glb"
+              echo "  - *_tex.glb"
+              echo "  - *.jpeg (reference image)"
+              echo "  - *.png (screenshot)"
+            else
+              echo "✅ $DIR has all required files"
+            fi
+          done
+        else
+          echo "ℹ️ No 3D model changes detected"
+        fi
+    
+    - name: Validate Python syntax
+      run: |
+        echo "Checking Python files for syntax errors..."
+        python -m py_compile display_glb.py || echo "⚠️ Syntax warning in display_glb.py"
+    
+    - name: Check file sizes
+      run: |
+        echo "Checking for large files..."
+        LARGE_FILES=$(find . -type f -size +100M 2>/dev/null || true)
+        if [ -n "$LARGE_FILES" ]; then
+          echo "⚠️ Warning: Found files larger than 100MB:"
+          echo "$LARGE_FILES"
+          echo "Consider optimizing large files to reduce repository size"
+        else
+          echo "✅ No excessively large files found"
+        fi
+    
+    - name: PR Validation Summary
+      run: |
+        echo "================================"
+        echo "PR Validation Complete! ✨"
+        echo "================================"
+        echo "Next steps:"
+        echo "1. Repository owner will review your submission"
+        echo "2. Address any feedback if requested"
+        echo "3. Once approved, your PR will be merged"
+        echo ""
+        echo "Thank you for contributing! 🎉"
+
